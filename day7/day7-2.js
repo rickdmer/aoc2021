@@ -1,13 +1,11 @@
 const path = require('path');
 const fs = require('fs');
-const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').toString().trim().split('\n')[0].split(',').map(value => parseInt(value));
+const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').split(',').map(value => parseInt(value));
 
 function getFuelUse(distance) {
     let fuel = 0;
-    let a = 1;
-    for (let i = 0; i < distance; i++) {
-        fuel += a;
-        a++;
+    for (let i = 1; i <= distance; i++) {
+        fuel += i;
     }
     return fuel;
 }
@@ -27,4 +25,3 @@ while (true) {
         break;
     }
 }
-
