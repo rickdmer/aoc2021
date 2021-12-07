@@ -1,0 +1,68 @@
+const path = require('path');
+const fs = require('fs');
+const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').toString().trim().split('\n');
+
+let numbers = input[0].split(',');
+
+let boardsLines = input.slice(2).map((value) => value.split(/(\s+)/).filter( e => e.trim().length > 0));
+let boards = [[]];
+let boardIndex = 0;
+for (let i = 0; i < boardsLines.length; i++) {
+    if (boardsLines[i].length === 0) {
+        boards.push([]);
+        boardIndex++;
+    } else {
+        boards[boardIndex].push(boardsLines[i]);
+    }    
+}
+
+// iterate over each called number and check for winners
+for (let i = 5; i <= numbers.length; i++) {
+    let calledNumbers = numbers.slice(0, i);
+    if (checkBoardsForWinners(calledNumbers)) {
+        console.log('WINNER!');
+        break;
+    }
+}
+
+function checkBoardsForWinners(calledNumbers) {
+    for (let i = 0; i < boards.length; i++) {
+        if (checkBoardForWin(boards[i], calledNumbers)) {
+            findUnmarked(boards[i], calledNumbers);
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkBoardForWin(rows, calledNumbers) {
+    // Check rows for win
+    for (let i = 0; i < rows.length; i++) {
+        if (checkLineForWin(rows[i], calledNumbers)) {
+            return true;
+        }
+    }
+
+    let cols = rows.map((val, colIndex) => rows.map(row => row[colIndex]));
+    for (let i = 0; i < cols.length; i++) {
+        if (checkLineForWin(cols[i], calledNumbers)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkLineForWin(line, calledNumbers) {
+    for (let i = 0; i < line.length; i++) {
+        if (calledNumbers.indexOf(line[i]) === -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function findUnmarked(lines, calledNumbers) {
+    let boardNumbers = [].concat(...lines);
+    let unmarkedNumbers = boardNumbers.filter(value => calledNumbers.indexOf(value) === -1);
+    console.log(unmarkedNumbers.reduce((p, c) => parseInt(p) + parseInt(c)) * calledNumbers[calledNumbers.length-1]);
+}
