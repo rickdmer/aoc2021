@@ -26,5 +26,5 @@ for (let y = 0; y < grid.length; y++) {
     }
 }
 
-basins.sort((a, b) => a - b);
-console.log(basins.slice(basins.length - 3, basins.length).reduce((total, value) => total * value));
+basins.sort((a, b) => b - a);
+console.log(basins.slice(0, 3).reduce((total, value) => total * value));
